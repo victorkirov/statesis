@@ -120,8 +120,8 @@ describe('#blend objects with primitive types', function() {
     blend(oldState, newState).should.equal(newState)
   })
 
-  it('returns blended object without field if new state has missing field', function() {
-    const newState = {...oldState}
+  it('returns new object without field if new state has missing field', function() {
+    const {stringData, ...newState} = oldState
     blend(oldState, newState).should.equal(newState)
   })
 })
