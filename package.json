@@ -1,6 +1,6 @@
 {
   "name": "statesis",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A smart state creator for redux states",
   "main": "lib/index.js",
   "scripts": {
@@ -10,8 +10,12 @@
     "compileTest": "babel --presets es2015 --plugins transform-object-rest-spread -o ./test.js ./testES6.js"
   },
   "babel": {
-    "presets": ["es2015"],
-    "plugins": ["transform-object-rest-spread"]
+    "presets": [
+      "es2015"
+    ],
+    "plugins": [
+      "transform-object-rest-spread"
+    ]
   },
   "repository": {
     "type": "git",
