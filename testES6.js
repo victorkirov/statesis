@@ -3,6 +3,7 @@ import {should, assert} from 'chai'
 
 should()
 
+// Primitive types tests
 describe('#blend primitive type states', function() {
   it('equal strings', function() {
     blend('test', 'test').should.equal('test')
@@ -57,39 +58,70 @@ describe('#blend primitive type states', function() {
   })
 })
 
-// describe('#blend objects with primitive types', function() {
+// Primitive types and objects
+describe('#blend objects with primitive types', function() {
+  const state = {}
 
-//   const oldState = {
-//       stringData: 'dataItem',
-//       numberData: 5
-//     }
+  it('returns new state if old state is string', function() {
+    blend('test', state).should.equal(state)
+  })
 
-//   it('returns old state object if states are equal', function() {
-//     blend(oldState, oldState).should.equal(oldState)
-//   })
+  it('returns string if old state is object', function() {
+    blend(state, 'test').should.equal('test')
+  })
 
-//   it('returns old state object if state values are equal', function() {
-//     const newState = {...oldState}
-//     blend(oldState, newState).should.equal(oldState)
-//   })
+  it('returns new state if old state is null', function() {
+    blend(null, state).should.equal(state)
+  })
 
-//   it('returns new object if new state has new field', function() {
-//     const newState = {...oldState, newStringData: 'newDataItem'}
-//     blend(oldState, newState).should.equal(newState)
-//   })
+  it('returns null if old state is object', function() {
+    const newState = blend(state, null)
+    assert.equal(newState, null)
+  })
 
-//   it('returns new object if new state has changed string value', function() {
-//     const newState = {...oldState, stringData: 'newValue'}
-//     blend(oldState, newState).should.equal(newState)
-//   })
+  it('returns new state if old state is undefined', function() {
+    blend(undefined, state).should.equal(state)
+  })
 
-//   it('returns new object if new state has changed number value', function() {
-//     const newState = {...oldState, numberData: 4}
-//     blend(oldState, newState).should.equal(newState)
-//   })
+  it('returns undefined if old state is object', function() {
+    const newState = blend(state, undefined)
+    assert.equal(newState, undefined)
+  })
+})
 
-//   it('returns blended object without field if new state has missing field', function() {
-//     const newState = {...oldState}
-//     blend(oldState, newState).should.equal(newState)
-//   })
-// })
+// Objects with primitive types only
+describe('#blend objects with primitive types', function() {
+  const oldState = {
+      stringData: 'dataItem',
+      numberData: 5
+    }
+
+  it('returns old state object if states are equal', function() {
+    blend(oldState, oldState).should.equal(oldState)
+  })
+
+  it('returns old state object if state values are equal', function() {
+    const newState = {...oldState}
+    blend(oldState, newState).should.equal(oldState)
+  })
+
+  it('returns new object if new state has new field', function() {
+    const newState = {...oldState, newStringData: 'newDataItem'}
+    blend(oldState, newState).should.equal(newState)
+  })
+
+  it('returns new object if new state has changed string value', function() {
+    const newState = {...oldState, stringData: 'newValue'}
+    blend(oldState, newState).should.equal(newState)
+  })
+
+  it('returns new object if new state has changed number value', function() {
+    const newState = {...oldState, numberData: 4}
+    blend(oldState, newState).should.equal(newState)
+  })
+
+  it('returns blended object without field if new state has missing field', function() {
+    const newState = {...oldState}
+    blend(oldState, newState).should.equal(newState)
+  })
+})

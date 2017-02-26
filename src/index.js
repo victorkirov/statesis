@@ -5,5 +5,5 @@ export function blend (oldState, newState) {
 
     if (typeof oldState !== 'object' || oldState === null) return newState
 
-    return oldState
+    return newState
 }
