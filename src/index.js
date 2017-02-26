@@ -17,7 +17,7 @@ export function blend (oldState, newState) {
     }
   })
 
-  const constructedState = {}
+  const constructedState = Array.isArray(newState) ? [] : {}
   let keepOld = true
 
   _.map(newState, (property, key) => {

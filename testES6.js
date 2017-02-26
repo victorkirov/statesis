@@ -380,8 +380,8 @@ describe('#blend objects with array properties', function() {
     blended.should.not.equal(oldState)
     assert.equal(newState.myArray.length, 3)
     assert.notEqual(blended.myArray, oldState.myArray)
-    assert.equal(newState.myArray[0], oldState.myArray[0])
-    assert.equal(newState.myArray[1], oldState.myArray[1])
+    assert.equal(blended.myArray[0], oldState.myArray[0], 'first value should be the same')
+    assert.equal(blended.myArray[1], oldState.myArray[1], 'second value should be the same')
   })
 
   it('returns new state if new state has removed array value', function() {
@@ -393,8 +393,8 @@ describe('#blend objects with array properties', function() {
     const blended = blend(oldState, newState)
     blended.should.not.equal(oldState)
     assert.notEqual(blended.myArray, oldState.myArray)
-    assert.equal(newState.myArray.length, 1)
-    assert.equal(newState.myArray[0], oldState.myArray[0])
+    assert.equal(blended.myArray.length, 1)
+    assert.equal(blended.myArray[0], oldState.myArray[0], 'first value should be the same')
   })
 
   it('returns new state if new state has changed array value', function() {
@@ -407,8 +407,38 @@ describe('#blend objects with array properties', function() {
     const blended = blend(oldState, newState)
     blended.should.not.equal(oldState)
     assert.notEqual(blended.myArray, oldState.myArray)
-    assert.equal(newState.myArray.length, 2)
-    assert.equal(newState.myArray[0], oldState.myArray[0])
-    assert.notEqual(newState.myArray[1], oldState.myArray[1])
+    assert.equal(blended.myArray.length, 2)
+    assert.equal(blended.myArray[0], oldState.myArray[0])
+    assert.notEqual(blended.myArray[1], oldState.myArray[1])
+  })
+
+  it('returns new state if new state has array value with new property', function() {
+    const newState = {...oldState}
+    newState.myArray = [...oldState.myArray]
+    newState.myArray[0] = {...oldState.myArray[0]}
+    newState.myArray[1] = {...oldState.myArray[1]}
+    newState.myArray[1].newDummy = 'hurrdurr'
+
+    const blended = blend(oldState, newState)
+    blended.should.not.equal(oldState)
+    assert.notEqual(blended.myArray, oldState.myArray)
+    assert.equal(blended.myArray.length, 2)
+    assert.equal(blended.myArray[0], oldState.myArray[0])
+    assert.notEqual(blended.myArray[1], oldState.myArray[1])
+  })
+
+  it('returns new state if new state has array value with deleted property', function() {
+    const newState = {...oldState}
+    newState.myArray = [...oldState.myArray]
+    newState.myArray[0] = {...oldState.myArray[0]}
+    newState.myArray[1] = {...oldState.myArray[1]}
+    delete newState.myArray[0].dummy
+
+    const blended = blend(oldState, newState)
+    blended.should.not.equal(oldState)
+    assert.notEqual(blended.myArray, oldState.myArray)
+    assert.equal(blended.myArray.length, 2)
+    assert.notEqual(blended.myArray[0], oldState.myArray[0])
+    assert.equal(blended.myArray[1], oldState.myArray[1])
   })
 })

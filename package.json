@@ -4,7 +4,6 @@
   "description": "A smart state creator for redux states",
   "main": "lib/index.js",
   "scripts": {
-    "testnc": "npm run compile && mocha --compilers js:babel-core/register",
     "test": "npm run compile && npm run compileTest && mocha --compilers js:babel-core/register",
     "prepublish": "npm run compile",
     "compile": "babel --presets es2015 --plugins transform-object-rest-spread -d ./lib ./src",
