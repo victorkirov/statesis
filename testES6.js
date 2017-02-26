@@ -340,7 +340,7 @@ describe('#blend objects with array properties', function() {
 })
 
 // Objects with array properties with object values
-describe('#blend objects with array properties', function() {
+describe('#blend objects with array properties with object values', function() {
   const oldState = {
       myArray: [{ key: 1, dummy: 'removeMe' }, { key: 2 }]
     }
@@ -440,5 +440,78 @@ describe('#blend objects with array properties', function() {
     assert.equal(blended.myArray.length, 2)
     assert.notEqual(blended.myArray[0], oldState.myArray[0])
     assert.equal(blended.myArray[1], oldState.myArray[1])
+  })
+})
+
+// Objects with array properties with nested object values
+describe('#blend objects with array properties with nested object values', function() {
+  const oldState = {
+      myArray: [{ innerItem: { key: 1, dummy: 'removeMe' }, otherInnerItem: { key: 2 } }]
+    }
+
+  it('returns old state object if states are equal', function() {
+    blend(oldState, oldState).should.equal(oldState)
+  })
+
+  it('returns old state object if state values are equal', function() {
+    const newState = {...oldState}
+    newState.myArray = [...oldState.myArray]
+    newState.myArray[0] = {...oldState.myArray[0]}
+    newState.myArray[0].innerItem = {...oldState.myArray[0].innerItem}
+    newState.myArray[0].otherInnerItem = {...oldState.myArray[0].otherInnerItem}
+    blend(oldState, newState).should.equal(oldState)
+  })
+
+  it('returns new state if new state has changed array value', function() {
+    const newState = {...oldState}
+    newState.myArray = [...oldState.myArray]
+    newState.myArray[0] = {...oldState.myArray[0]}
+    newState.myArray[0].innerItem = {...oldState.myArray[0].innerItem}
+    newState.myArray[0].innerItem.key = 5
+    newState.myArray[0].otherInnerItem = {...oldState.myArray[0].otherInnerItem}
+
+    const blended = blend(oldState, newState)
+    blended.should.not.equal(oldState)
+    assert.notEqual(blended.myArray, oldState.myArray)
+    assert.equal(blended.myArray.length, 1)
+    assert.notEqual(blended.myArray[0], oldState.myArray[0])
+    assert.notEqual(blended.myArray[0].innerItem, oldState.myArray[0].innerItem)
+    assert.equal(blended.myArray[0].otherInnerItem, oldState.myArray[0].otherInnerItem)
+  })
+
+  it('returns new state if new state has array value with new property', function() {
+    const newState = {...oldState}
+    newState.myArray = [...oldState.myArray]
+    newState.myArray[0] = {...oldState.myArray[0]}
+    newState.myArray[0].innerItem = {...oldState.myArray[0].innerItem}
+    newState.myArray[0].innerItem.key = 5
+    newState.myArray[0].otherInnerItem = {...oldState.myArray[0].otherInnerItem}
+    newState.myArray[0].innerItem.newDummy = 'hurrdurr'
+
+    const blended = blend(oldState, newState)
+    blended.should.not.equal(oldState)
+    assert.notEqual(blended.myArray, oldState.myArray)
+    assert.equal(blended.myArray.length, 1)
+    assert.notEqual(blended.myArray[0], oldState.myArray[0])
+    assert.notEqual(blended.myArray[0].innerItem, oldState.myArray[0].innerItem)
+    assert.equal(blended.myArray[0].otherInnerItem, oldState.myArray[0].otherInnerItem)
+  })
+
+  it('returns new state if new state has array value with deleted property', function() {
+    const newState = {...oldState}
+    newState.myArray = [...oldState.myArray]
+    newState.myArray[0] = {...oldState.myArray[0]}
+    newState.myArray[0].innerItem = {...oldState.myArray[0].innerItem}
+    newState.myArray[0].innerItem.key = 5
+    newState.myArray[0].otherInnerItem = {...oldState.myArray[0].otherInnerItem}
+    delete newState.myArray[0].innerItem.dummy
+
+    const blended = blend(oldState, newState)
+    blended.should.not.equal(oldState)
+    assert.notEqual(blended.myArray, oldState.myArray)
+    assert.equal(blended.myArray.length, 1)
+    assert.notEqual(blended.myArray[0], oldState.myArray[0])
+    assert.notEqual(blended.myArray[0].innerItem, oldState.myArray[0].innerItem)
+    assert.equal(blended.myArray[0].otherInnerItem, oldState.myArray[0].otherInnerItem)
   })
 })
