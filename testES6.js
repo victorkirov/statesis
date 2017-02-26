@@ -290,3 +290,125 @@ describe('#blend objects with nested object properties', function() {
     assert.equal(blended.innerItem.otherInnerInnerItem, oldState.innerItem.otherInnerInnerItem)
   })
 })
+
+// Objects with array properties
+describe('#blend objects with array properties', function() {
+  const oldState = {
+      myArray: ['zero', 1,2,3,4]
+    }
+
+  it('returns old state object if states are equal', function() {
+    blend(oldState, oldState).should.equal(oldState)
+  })
+
+  it('returns old state object if state values are equal', function() {
+    const newState = {...oldState}
+    newState.myArray = [...oldState.myArray]
+    blend(oldState, newState).should.equal(oldState)
+  })
+
+  it('returns new state if new state has new field', function() {
+    const newState = {...oldState, newStringData: 'newDataItem'}
+
+    const blended = blend(oldState, newState)
+    blended.should.not.equal(oldState)
+    assert.equal(blended.myArray, oldState.myArray)
+    assert.equal(blended.newStringData, 'newDataItem')
+  })
+
+  it('returns new state if new state has added array value', function() {
+    const newState = {...oldState}
+    newState.myArray = [...oldState.myArray]
+    newState.myArray.push(5)
+
+    const blended = blend(oldState, newState)
+    blended.should.not.equal(oldState)
+    assert.notEqual(blended.myArray, oldState.myArray)
+    assert.equal(newState.myArray.length, 6)
+  })
+
+  it('returns new state if new state has removed array value', function() {
+    const newState = {...oldState}
+    newState.myArray = [...oldState.myArray]
+    newState.myArray.pop()
+
+    const blended = blend(oldState, newState)
+    blended.should.not.equal(oldState)
+    assert.notEqual(blended.myArray, oldState.myArray)
+    assert.equal(newState.myArray.length, 4)
+  })
+})
+
+// Objects with array properties with object values
+describe('#blend objects with array properties', function() {
+  const oldState = {
+      myArray: [{ key: 1, dummy: 'removeMe' }, { key: 2 }]
+    }
+
+  it('returns old state object if states are equal', function() {
+    blend(oldState, oldState).should.equal(oldState)
+  })
+
+  it('returns old state object if state values are equal', function() {
+    const newState = {...oldState}
+    newState.myArray = [...oldState.myArray]
+    newState.myArray[0] = {...oldState.myArray[0]}
+    newState.myArray[1] = {...oldState.myArray[1]}
+    blend(oldState, newState).should.equal(oldState)
+  })
+
+  it('returns new state if new state has new field', function() {
+    const newState = {...oldState, newStringData: 'newDataItem'}
+    newState.myArray = [...oldState.myArray]
+    newState.myArray[0] = {...oldState.myArray[0]}
+    newState.myArray[1] = {...oldState.myArray[1]}
+
+    const blended = blend(oldState, newState)
+    blended.should.not.equal(oldState)
+    assert.equal(blended.myArray, oldState.myArray)
+    assert.equal(blended.newStringData, 'newDataItem')
+  })
+
+  it('returns new state if new state has added array value', function() {
+    const newState = {...oldState}
+    newState.myArray = [...oldState.myArray]
+    newState.myArray[0] = {...oldState.myArray[0]}
+    newState.myArray[1] = {...oldState.myArray[1]}
+    newState.myArray.push(5)
+
+    const blended = blend(oldState, newState)
+    blended.should.not.equal(oldState)
+    assert.equal(newState.myArray.length, 3)
+    assert.notEqual(blended.myArray, oldState.myArray)
+    assert.equal(newState.myArray[0], oldState.myArray[0])
+    assert.equal(newState.myArray[1], oldState.myArray[1])
+  })
+
+  it('returns new state if new state has removed array value', function() {
+    const newState = {...oldState}
+    newState.myArray = [...oldState.myArray]
+    newState.myArray[0] = {...oldState.myArray[0]}
+    newState.myArray.pop()
+
+    const blended = blend(oldState, newState)
+    blended.should.not.equal(oldState)
+    assert.notEqual(blended.myArray, oldState.myArray)
+    assert.equal(newState.myArray.length, 1)
+    assert.equal(newState.myArray[0], oldState.myArray[0])
+  })
+
+  it('returns new state if new state has changed array value', function() {
+    const newState = {...oldState}
+    newState.myArray = [...oldState.myArray]
+    newState.myArray[0] = {...oldState.myArray[0]}
+    newState.myArray[1] = {...oldState.myArray[1]}
+    newState.myArray[1].key = 5
+
+    const blended = blend(oldState, newState)
+    blended.should.not.equal(oldState)
+    assert.notEqual(blended.myArray, oldState.myArray)
+    assert.equal(newState.myArray.length, 2)
+    assert.equal(newState.myArray[0], oldState.myArray[0])
+    assert.notEqual(newState.myArray[1], oldState.myArray[1])
+  })
+})
