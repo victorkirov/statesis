@@ -1,19 +1,4 @@
-# Logs
-logs
-*.log
-npm-debug.log*
-
-# Grunt intermediate storage (http://gruntjs.com/creating-plugins#storing-task-files)
-.grunt
-
-# Dependency directories
-node_modules
-
-# Build directory
-/lib/
-
-# Test files
-test.js
-
-# VS Code
-/.vscode/*
+.vscode/
+node_modules/
+lib/
+coverage/

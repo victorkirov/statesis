@@ -1,5 +1,10 @@
 /src/
-test.js
-testES6.js
 /.vscode/
 /node_modules/
+.eslintrc
+.gitignore
+eslintRules.js
+jest.config.js
+pnpm-lock.yaml
+tsconfig.json
+tsconfig.build.json
