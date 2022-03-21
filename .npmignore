@@ -1,6 +1,7 @@
 /src/
 /.vscode/
 /node_modules/
+/coverage/
 .eslintrc
 .gitignore
 eslintRules.js
