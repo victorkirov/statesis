@@ -36,23 +36,29 @@ newState.person1.age = 31
 
 We would get the following results:
 ```javascript
-oldState === newState // false, as desired
+oldState === newState
+// false, as desired
 
-oldState.person1 === newState.person1 // false, also as desired since the age changed
+oldState.person1 === newState.person1
+// false, also as desired since the age changed
 
-oldState.person2 === newState.person2 /*false, which is undesirable because if
-anything was connected to this object then it would register a props change*/
+oldState.person2 === newState.person2
+/* false, which is undesirable because if anything was connected to
+this object then it would register a props change*/
 ```
 
 If we now use the `blend` method from statesis, we get the following:
 ```javascript
 blendedState = blend(oldState, newState)
 
-oldState === blendedState // false, as desired
+oldState === blendedState
+// false, as desired
 
-oldState.person1 === blendedState.person1 // false, also as desired since the age changed
+oldState.person1 === blendedState.person1
+// false, also as desired since the age changed
 
-oldState.person2 === blendedState.person2 // true, as desired to avoid props changing
+oldState.person2 === blendedState.person2
+// true, as desired to avoid props changing
 ```
 
 Statesis works with primitive types and objects alike. It is compatible with nested objects and arrays. For now there is no smart tracking of objects within arrays so if the 10th item is removed from an array of length 21 then the last ten items will have new references.
