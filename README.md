@@ -10,36 +10,51 @@ Statesis does a deep compare/copy of 2 states and compiles a new state which kee
 
 For example if we had an old state:
 
-`oldState = {person1: {name: 'bob', age: 30}, person2: {name: 'cindy', age: 27}}`
+```javascript
+oldState = {
+  person1: {
+    name: 'bob',
+    age: 30,
+  },
+  person2: {
+    name: 'cindy',
+    age: 27,
+  },
+}
+```
 
 And we created a new state as follows:
+```javascript
+newState = {...oldState}
 
-    newState = {...oldState}
+newState.person1 = {...oldState.person1}
 
-    newState.person1 = {...oldState.person1}
+newState.person2 = {...oldState.person2}
 
-    newState.person2 = {...oldState.person2}
-    
-    newState.person1.age = 31
+newState.person1.age = 31
+```
 
 We would get the following results:
+```javascript
+oldState === newState // false, as desired
 
-    oldState === newState // false, as desired
-    
-    oldState.person1 === newState.person1 // false, also as desired since the age changed
-    
-    oldState.person2 === newState.person2 // false, which is undesirable because if anything was connected to this object then it would register a rpops change
+oldState.person1 === newState.person1 // false, also as desired since the age changed
+
+oldState.person2 === newState.person2 /*false, which is undesirable because if
+anything was connected to this object then it would register a props change*/
+```
 
 If we now use the `blend` method from statesis, we get the following:
-  
-    blendedState = blend(oldState, newState)
-    
-    oldState === blendedState // false, as desired
-    
-    oldState.person1 === blendedState.person1 // false, also as desired since the age changed
-    
-    oldState.person2 === blendedState.person2 // true, as desired to avoid props changing
-    
+```javascript
+blendedState = blend(oldState, newState)
+
+oldState === blendedState // false, as desired
+
+oldState.person1 === blendedState.person1 // false, also as desired since the age changed
+
+oldState.person2 === blendedState.person2 // true, as desired to avoid props changing
+```
+
 Statesis works with primitive types and objects alike. It is compatible with nested objects and arrays. For now there is no smart tracking of objects within arrays so if the 10th item is removed from an array of length 21 then the last ten items will have new references.
 
 ## To install
@@ -47,6 +62,8 @@ Statesis is available on npm. just run `npm install statesis` to install.
 
 ## Usage
 Example usage:
-    import {blend} from 'statesis'
-    
-    const blendedState = blend(oldState, newState) 
+```javascript
+import {blend} from 'statesis'
+
+const blendedState = blend(oldState, newState)
+```
