@@ -1,7 +1,7 @@
 {
   "name": "statesis",
-  "version": "0.1.6",
-  "license": "GPL-3.0-only",
+  "version": "0.1.7",
+  "license": "MIT",
   "description": "A smart state creator for redux states",
   "main": "lib/index.js",
   "scripts": {
