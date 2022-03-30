@@ -1,6 +1,6 @@
 {
   "name": "statesis",
-  "version": "0.1.7",
+  "version": "0.2.0",
   "license": "MIT",
   "description": "A smart state creator for redux states",
   "main": "lib/index.js",
@@ -42,6 +42,5 @@
     "ts-jest": "^27.1.3",
     "typescript": "^4.6.2"
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }
