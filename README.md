@@ -1,14 +1,23 @@
 # Statesis
-A smart state constructor for redux states
+An object re-referencer and merger.
 
+## Capabilities
+
+Statesis allows you to re-reference an object from an existing object, or to merge updates from a new object into the old while keeping references to the unchanged fields within the object. This is particularly useful where object immutability is required/preferred (e.g. in React).
+
+### reReference
+
+### merge
+
+## Use in React/Redux
 Statesis should be used in an environment where a new state object is often equal to or very similar to the old but because of the tools used, it is recreated with completely new references. Statesis allows you to create a new state object re-using the referenced objects from the old state to avoid props changed events from firing.
 
-Statesis is useful in places where doing a deep scan and build of a state is less detrimental than doing a deep compare at the componentWillReceiveProps event (i.e. if a change in state will cause many components to rerender)
+Statesis is useful in places where doing a deep scan and build of a state is less detrimental than doing a deep compare at the componentWillReceiveProps event (i.e. if a change in state will cause many components to rerender).
 
 ## How it works
-Statesis does a deep compare/copy of 2 states and compiles a new state which keeps references to unchanged objects from the old state and mixes them with new objects which have altered in the new state.
+Statesis does a deep compare/copy of 2 objects and compiles a new objects which keeps references to unchanged objects from the old objects and mixes them with new objects which have altered in the new objects.
 
-For example if we had an old state:
+For example if we had an old objects:
 
 ```javascript
 oldState = {
@@ -23,7 +32,7 @@ oldState = {
 }
 ```
 
-And we created a new state as follows:
+And we created a new object as follows:
 ```javascript
 newState = {...oldState}
 
@@ -47,9 +56,9 @@ oldState.person2 === newState.person2
 this object then it would register a props change*/
 ```
 
-If we now use the `blend` method from statesis, we get the following:
+If we now use the `reReference` method from statesis, we get the following:
 ```javascript
-blendedState = blend(oldState, newState)
+blendedState = reReference(oldState, newState)
 
 oldState === blendedState
 // false, as desired
@@ -69,7 +78,8 @@ Statesis is available on npm. just run `npm install statesis` to install.
 ## Usage
 Example usage:
 ```javascript
-import {blend} from 'statesis'
+import { reReference, merge } from 'statesis'
 
-const blendedState = blend(oldState, newState)
+const reReferencedState = reReference(oldState, newState)
+const mergedState = merge(oldState, newState)
 ```

@@ -1,3 +1,5 @@
+import { Merge } from './merge'
+
 function areSameByReference<T>(oldState: unknown, newState: T): oldState is T {
   return oldState === newState
 }
@@ -6,7 +8,9 @@ function oldIsNewType<N>(_oldState: unknown, keepOld: boolean): _oldState is N {
   return keepOld
 }
 
-export function blend<O, N>(oldState: O, newState: N): N {
+function blend<O, N, R extends boolean>(oldState: O, newState: N, reReferenceOnly: R): R extends true ? N : Merge<O, N>
+
+function blend<O, N>(oldState: O, newState: N, reReferenceOnly = false): N | Merge<O, N> {
   if (areSameByReference(oldState, newState)) return oldState
 
   if (
@@ -18,6 +22,8 @@ export function blend<O, N>(oldState: O, newState: N): N {
   ) {
     return newState
   }
+
+  const shouldReReferenceOnly = reReferenceOnly || Array.isArray(newState)
 
   const oldStateKeysList: (keyof O)[] = Object.keys(oldState) as (keyof O)[]
   const oldStateKeysSet: Set<keyof O> = new Set(oldStateKeysList)
@@ -34,11 +40,17 @@ export function blend<O, N>(oldState: O, newState: N): N {
     newStateKeysList.filter(key => !oldStateKeysSet.has(key as unknown as keyof O)),
   )
 
-  const constructedState: N = (Array.isArray(newState) ? [] : {}) as N
+  const constructedState: any = (Array.isArray(newState) ? [] : {})
   let keepOld = droppedKeys.size === 0
 
+  if (!shouldReReferenceOnly) {
+    for (const droppedKey of droppedKeys) {
+      constructedState[droppedKey] = oldState[droppedKey]
+    }
+  }
+
   for (const carriedOverKey of carriedOverKeys) {
-    constructedState[carriedOverKey] = blend(oldState[carriedOverKey], newState[carriedOverKey])
+    constructedState[carriedOverKey] = blend(oldState[carriedOverKey], newState[carriedOverKey], shouldReReferenceOnly)
     if (!areSameByReference(constructedState[carriedOverKey], oldState[carriedOverKey])) {
       keepOld = false
     }
@@ -54,3 +66,6 @@ export function blend<O, N>(oldState: O, newState: N): N {
   }
   return constructedState
 }
+
+export const reReference = <O, N>(oldState: O, newState: N): N => blend(oldState, newState, true)
+export const merge = <O, N>(oldState: O, newState: N): Merge<O, N> => blend(oldState, newState, false)
