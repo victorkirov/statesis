@@ -1,101 +1,101 @@
 import { reReference } from './index'
 
 describe('reReference', () => {
-  describe('primitive type states', function () {
-    test('equal strings', function () {
+  describe('primitive type states', () => {
+    test('equal strings', () => {
       expect(reReference('test', 'test')).toBe('test')
     })
 
-    test('different strings', function () {
+    test('different strings', () => {
       expect(reReference('test', 'test2')).toBe('test2')
     })
 
-    test('equal numbers', function () {
+    test('equal numbers', () => {
       expect(reReference(5, 5)).toBe(5)
     })
 
-    test('different numbers', function () {
+    test('different numbers', () => {
       expect(reReference(5, 6)).toBe(6)
     })
 
-    test('equal booleans', function () {
+    test('equal booleans', () => {
       expect(reReference(true, true)).toBe(true)
     })
 
-    test('different booleans', function () {
+    test('different booleans', () => {
       expect(reReference(true, false)).toBe(false)
     })
 
-    test('equal undefined', function () {
+    test('equal undefined', () => {
       expect(reReference(undefined, undefined)).toBeUndefined()
     })
 
-    test('undefined and something else', function () {
+    test('undefined and something else', () => {
       expect(reReference(undefined, 4)).toBe(4)
     })
 
-    test('something and undefined', function () {
+    test('something and undefined', () => {
       expect(reReference(4, undefined)).toBeUndefined()
     })
 
-    test('equal nulls', function () {
+    test('equal nulls', () => {
       expect(reReference(null, null)).toBe(null)
     })
 
-    test('null and something else', function () {
+    test('null and something else', () => {
       expect(reReference(null, 4)).toBe(4)
     })
 
-    test('something and null', function () {
+    test('something and null', () => {
       expect(reReference(4, null)).toBe(null)
     })
   })
 
 
-  describe('objects with primitive types', function () {
+  describe('objects with primitive types', () => {
     const state = {}
 
-    test('returns new state if old state is string', function () {
+    test('returns new state if old state is string', () => {
       expect(reReference('test', state)).toBe(state)
     })
 
-    test('returns string if old state is object', function () {
+    test('returns string if old state is object', () => {
       expect(reReference(state, 'test')).toBe('test')
     })
 
-    test('returns new state if old state is null', function () {
+    test('returns new state if old state is null', () => {
       expect(reReference(null, state)).toBe(state)
     })
 
-    test('returns null if old state is object', function () {
+    test('returns null if old state is object', () => {
       expect(reReference(state, null)).toBe(null)
     })
 
-    test('returns new state if old state is undefined', function () {
+    test('returns new state if old state is undefined', () => {
       expect(reReference(undefined, state)).toBe(state)
     })
 
-    test('returns undefined if old state is object', function () {
+    test('returns undefined if old state is object', () => {
       expect(reReference(state, undefined)).toBeUndefined()
     })
   })
 
-  describe('objects with primitive properties', function () {
+  describe('objects with primitive properties', () => {
     const oldState = {
       stringData: 'dataItem',
       numberData: 5,
     }
 
-    test('returns old state object if states are equal', function () {
+    test('returns old state object if states are equal', () => {
       expect(reReference(oldState, oldState)).toBe(oldState)
     })
 
-    test('returns old state object if state values are equal', function () {
+    test('returns old state object if state values are equal', () => {
       const newState = { ...oldState }
       expect(reReference(oldState, newState)).toBe(oldState)
     })
 
-    test('returns new state if new state has new field', function () {
+    test('returns new state if new state has new field', () => {
       const newState = { ...oldState, newStringData: 'newDataItem' }
       const reReferenced = reReference(oldState, newState)
       expect(reReferenced).not.toEqual(oldState)
@@ -104,7 +104,7 @@ describe('reReference', () => {
       expect(reReferenced.newStringData).toBe('newDataItem')
     })
 
-    test('returns new state if new state has changed string value', function () {
+    test('returns new state if new state has changed string value', () => {
       const newState = { ...oldState, stringData: 'newValue' }
       const reReferenced = reReference(oldState, newState)
       expect(reReferenced).not.toEqual(oldState)
@@ -112,14 +112,14 @@ describe('reReference', () => {
       expect(reReferenced.stringData).toBe('newValue')
     })
 
-    test('returns new state if new state has changed number value', function () {
+    test('returns new state if new state has changed number value', () => {
       const newState = { ...oldState, numberData: 4 }
       const reReferenced = reReference(oldState, newState)
       expect(reReferenced.stringData).toBe(oldState.stringData)
       expect(reReferenced.numberData).toBe(4)
     })
 
-    test('returns new state without field if new state has missing field', function () {
+    test('returns new state without field if new state has missing field', () => {
       const { stringData, ...newState } = oldState
       const reReferenced = reReference(oldState, newState)
       expect(reReferenced.numberData).toBe(oldState.numberData)
@@ -127,7 +127,7 @@ describe('reReference', () => {
     })
   })
 
-  describe('objects with object properties', function () {
+  describe('objects with object properties', () => {
     const oldState = {
       stringData: 'dataItem',
       numberData: 5,
@@ -142,22 +142,22 @@ describe('reReference', () => {
       undefinedItem: undefined,
     }
 
-    test('returns old state object if states are equal', function () {
+    test('returns old state object if states are equal', () => {
       expect(reReference(oldState, oldState)).toBe(oldState)
     })
 
-    test('returns old state object if state values are equal', function () {
+    test('returns old state object if state values are equal', () => {
       const newState = { ...oldState }
       expect(reReference(oldState, newState)).toBe(oldState)
     })
 
-    test('returns old state object if inner state values are equal', function () {
+    test('returns old state object if inner state values are equal', () => {
       const newState = { ...oldState }
       newState.innerItem = { ...oldState.innerItem }
       expect(reReference(oldState, newState)).toBe(oldState)
     })
 
-    test('returns new state object if inner state values are different', function () {
+    test('returns new state object if inner state values are different', () => {
       const newState = { ...oldState }
       newState.innerItem = { ...oldState.innerItem, innerNumber: 7 }
 
@@ -170,7 +170,7 @@ describe('reReference', () => {
       expect(reReferenced.innerItem.innerNumber).toBe(7)
     })
 
-    test('returns new state object if inner state has new field', function () {
+    test('returns new state object if inner state has new field', () => {
       const newState = { ...oldState }
       newState.innerItem = { ...oldState.innerItem, newField: 7 } as any
 
@@ -184,7 +184,7 @@ describe('reReference', () => {
       expect(reReferenced.innerItem.innerNumber).toBe(6)
     })
 
-    test('returns new state object if inner state has removed field', function () {
+    test('returns new state object if inner state has removed field', () => {
       const { innerNumber, ...newInnerItem } = oldState.innerItem
       const newState = { ...oldState, innerItem: newInnerItem }
 
@@ -199,7 +199,7 @@ describe('reReference', () => {
 
     test(
       'returns newly constructed, reReferenced object if inner state value changed on one object but not other',
-      function () {
+      () => {
         const newState = { ...oldState, otherInnerItem: { newFoo: 'newBar' } }
         newState.innerItem = { ...oldState.innerItem }
 
@@ -211,7 +211,7 @@ describe('reReference', () => {
     )
   })
 
-  describe('objects with nested object properties', function () {
+  describe('objects with nested object properties', () => {
     const oldState = {
       stringData: 'dataItem',
       numberData: 5,
@@ -234,11 +234,11 @@ describe('reReference', () => {
       undefinedItem: undefined,
     }
 
-    test('returns old state object if states are equal', function () {
+    test('returns old state object if states are equal', () => {
       expect(reReference(oldState, oldState)).toBe(oldState)
     })
 
-    test('returns old state object if state values are equal', function () {
+    test('returns old state object if state values are equal', () => {
       const newState = { ...oldState }
       newState.innerItem = { ...oldState.innerItem }
       newState.innerItem.innerInnerItem = { ...oldState.innerItem.innerInnerItem }
@@ -249,7 +249,7 @@ describe('reReference', () => {
       expect(reReferenced.innerItem.innerInnerItem).toBe(oldState.innerItem.innerInnerItem)
     })
 
-    test('returns new state object if state values are different', function () {
+    test('returns new state object if state values are different', () => {
       const newState = { ...oldState }
       newState.innerItem = { ...oldState.innerItem }
       newState.innerItem.innerInnerItem = { ...oldState.innerItem.innerInnerItem }
@@ -264,7 +264,7 @@ describe('reReference', () => {
       expect(reReferenced.innerItem.otherInnerInnerItem).toBe(oldState.innerItem.otherInnerInnerItem)
     })
 
-    test('returns reReferenced state object if deleted inner object property', function () {
+    test('returns reReferenced state object if deleted inner object property', () => {
       const { deepString, ...newInnerInnerItem } = oldState.innerItem.innerInnerItem
       const newOtherInnerInnerItem = { ...oldState.innerItem.otherInnerInnerItem }
       const newInnerItem = {
@@ -283,22 +283,22 @@ describe('reReference', () => {
     })
   })
 
-  describe('objects with array properties', function () {
+  describe('objects with array properties', () => {
     const oldState = {
       myArray: ['zero', 1, 2, 3, 4],
     }
 
-    test('returns old state object if states are equal', function () {
+    test('returns old state object if states are equal', () => {
       expect(reReference(oldState, oldState)).toBe(oldState)
     })
 
-    test('returns old state object if state values are equal', function () {
+    test('returns old state object if state values are equal', () => {
       const newState = { ...oldState }
       newState.myArray = [...oldState.myArray]
       expect(reReference(oldState, newState)).toBe(oldState)
     })
 
-    test('returns new state if new state has new field', function () {
+    test('returns new state if new state has new field', () => {
       const newState = { ...oldState, newStringData: 'newDataItem' }
 
       const reReferenced = reReference(oldState, newState)
@@ -307,7 +307,7 @@ describe('reReference', () => {
       expect(reReferenced.newStringData).toBe('newDataItem')
     })
 
-    test('returns new state if new state has added array value', function () {
+    test('returns new state if new state has added array value', () => {
       const newState = { ...oldState }
       newState.myArray = [...oldState.myArray]
       newState.myArray.push(5)
@@ -318,7 +318,7 @@ describe('reReference', () => {
       expect(newState.myArray.length).toBe(6)
     })
 
-    test('returns new state if new state has removed array value', function () {
+    test('returns new state if new state has removed array value', () => {
       const newState = { ...oldState }
       newState.myArray = [...oldState.myArray]
       newState.myArray.pop()
@@ -330,16 +330,16 @@ describe('reReference', () => {
     })
   })
 
-  describe('objects with array properties with object values', function () {
+  describe('objects with array properties with object values', () => {
     const oldState = {
       myArray: [{ key: 1, dummy: 'removeMe' }, { key: 2 }],
     }
 
-    test('returns old state object if states are equal', function () {
+    test('returns old state object if states are equal', () => {
       expect(reReference(oldState, oldState)).toBe(oldState)
     })
 
-    test('returns old state object if state values are equal', function () {
+    test('returns old state object if state values are equal', () => {
       const newMyArray = [
         { ...oldState.myArray[0] },
         { ...oldState.myArray[1] },
@@ -348,7 +348,7 @@ describe('reReference', () => {
       expect(reReference(oldState, newState)).toBe(oldState)
     })
 
-    test('returns new state if new state has new field', function () {
+    test('returns new state if new state has new field', () => {
       const newMyArray = [
         { ...oldState.myArray[0] },
         { ...oldState.myArray[1] },
@@ -361,7 +361,7 @@ describe('reReference', () => {
       expect(reReferenced.newStringData).toBe('newDataItem')
     })
 
-    test('returns new state if new state has added array value', function () {
+    test('returns new state if new state has added array value', () => {
       const newMyArray = [
         { ...oldState.myArray[0] },
         { ...oldState.myArray[1] },
@@ -378,7 +378,7 @@ describe('reReference', () => {
       expect(reReferenced.myArray[1]).toBe(oldState.myArray[1])
     })
 
-    test('returns new state if new state has removed array value', function () {
+    test('returns new state if new state has removed array value', () => {
       const newMyArray = [
         { ...oldState.myArray[0] },
       ]
@@ -392,7 +392,7 @@ describe('reReference', () => {
       expect(reReferenced.myArray[0]).toBe(oldState.myArray[0])
     })
 
-    test('returns new state if new state has changed array value', function () {
+    test('returns new state if new state has changed array value', () => {
       const newMyArray = [
         { ...oldState.myArray[0] },
         { ...oldState.myArray[1], key: 5 },
@@ -408,7 +408,7 @@ describe('reReference', () => {
       expect(reReferenced.myArray[1]).not.toEqual(oldState.myArray[1])
     })
 
-    test('returns new state if new state has array value with new property', function () {
+    test('returns new state if new state has array value with new property', () => {
       const newMyArray = [
         { ...oldState.myArray[0] },
         { ...oldState.myArray[1], newDummy: 'hurrdurr' },
@@ -423,7 +423,7 @@ describe('reReference', () => {
       expect(reReferenced.myArray[1]).not.toEqual(oldState.myArray[1])
     })
 
-    test('returns new state if new state has array value with deleted property', function () {
+    test('returns new state if new state has array value with deleted property', () => {
       const newFirstVal = { key: oldState.myArray[0]?.key }
       const newMyArray = [
         newFirstVal,
@@ -440,23 +440,23 @@ describe('reReference', () => {
     })
   })
 
-  describe('objects with array properties with nested object values', function () {
+  describe('objects with array properties with nested object values', () => {
     const oldState = {
       myArray: [{ innerItem: { key: 1, dummy: 'removeMe' }, otherInnerItem: { key: 2 } }],
     }
 
-    test('returns old state object if states are equal', function () {
+    test('returns old state object if states are equal', () => {
       expect(reReference(oldState, oldState)).toBe(oldState)
     })
 
-    test('returns old state object if state values are equal', function () {
+    test('returns old state object if state values are equal', () => {
       const newState = {
         myArray: [{ innerItem: { key: 1, dummy: 'removeMe' }, otherInnerItem: { key: 2 } }],
       }
       expect(reReference(oldState, newState)).toBe(oldState)
     })
 
-    test('returns new state if new state has changed array value', function () {
+    test('returns new state if new state has changed array value', () => {
       const newState = {
         myArray: [{ innerItem: { key: 5, dummy: 'removeMe' }, otherInnerItem: { key: 2 } }],
       }
@@ -470,7 +470,7 @@ describe('reReference', () => {
       expect(reReferenced.myArray[0]?.otherInnerItem).toBe(oldState.myArray[0]?.otherInnerItem)
     })
 
-    test('returns new state if new state has array value with new property', function () {
+    test('returns new state if new state has array value with new property', () => {
       const newState = {
         myArray: [{ innerItem: { key: 5, dummy: 'removeMe', newDummy: 'hurrdurr' }, otherInnerItem: { key: 2 } }],
       }
@@ -484,7 +484,7 @@ describe('reReference', () => {
       expect(reReferenced.myArray[0]?.otherInnerItem).toBe(oldState.myArray[0]?.otherInnerItem)
     })
 
-    test('returns new state if new state has array value with deleted property', function () {
+    test('returns new state if new state has array value with deleted property', () => {
       const newState = {
         myArray: [{ innerItem: { key: 5 }, otherInnerItem: { key: 2 } }],
       }
@@ -499,7 +499,7 @@ describe('reReference', () => {
     })
   })
 
-  describe('value changes from list to object', function () {
+  describe('value changes from list to object', () => {
     const oldState = {
       innerList: [1, 2],
       innerObject: {
@@ -507,11 +507,11 @@ describe('reReference', () => {
       },
     }
 
-    test('returns old state object if states are equal', function () {
+    test('returns old state object if states are equal', () => {
       expect(reReference(oldState, oldState)).toBe(oldState)
     })
 
-    test('returns old state object if state values are equal', function () {
+    test('returns old state object if state values are equal', () => {
       const newState = {
         ...oldState,
         innerList: [...oldState.innerList],
@@ -520,13 +520,13 @@ describe('reReference', () => {
       expect(reReference(oldState, newState)).toBe(oldState)
     })
 
-    test('returns new state if list changes to object', function () {
+    test('returns new state if list changes to object', () => {
       const newState = { ...oldState, innerList: { '0': 1, '1': 2 } }
 
       expect(reReference(oldState, newState)).toEqual(newState)
     })
 
-    test('returns new state if object changes to list', function () {
+    test('returns new state if object changes to list', () => {
       const newState = { ...oldState, innerObject: [1] }
 
       expect(reReference(oldState, newState)).toEqual(newState)
