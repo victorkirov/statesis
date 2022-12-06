@@ -42,7 +42,7 @@ type MergeNonUnionObjects<T, U> = Expand<
 >
 
 
-type MergeArrays<T extends readonly any[], U extends readonly any[]> = U
+type MergeArrays<U extends readonly any[]> = U
 
 type MergeObjects<T, U> = [T] extends [never]
   ? U extends any
@@ -60,5 +60,5 @@ type MergeObjects<T, U> = [T] extends [never]
 
 export type Merge<T, U> =
 U extends Primitive ? U :
-  | MergeArrays<Extract<T, readonly any[]>, Extract<U, readonly any[]>>
+  | MergeArrays<Extract<U, readonly any[]>>
   | MergeObjects<Exclude<T, Primitive | readonly any[]>, Exclude<U, Primitive | readonly any[]>>

@@ -1,4 +1,4 @@
-import { Merge } from './merge'
+import { Merge } from './merge.types'
 
 function areSameByReference<T>(oldState: unknown, newState: T): oldState is T {
   return oldState === newState
@@ -19,6 +19,8 @@ function blend<O, N>(oldState: O, newState: N, reReferenceOnly = false): N | Mer
     || typeof newState !== 'object'
     || oldState === null
     || newState === null
+    || oldState === undefined
+    || newState === undefined
   ) {
     return newState
   }
